@@ -2,7 +2,7 @@
 using Mediatek86.modele;
 using Mediatek86.metier;
 using Mediatek86.vue;
-
+using System;
 
 namespace Mediatek86.controleur
 {
@@ -85,6 +85,24 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
+        /// getter sur les suivis
+        /// </summary>
+        /// <returns>Collection d'objets Suivi</returns>
+        public List<Suivi> GetAllSuivis()
+        {
+            return Dao.GetAllSuivis();
+        }
+
+        /// <summary>
+        /// getter sur les commandes
+        /// </summary>
+        /// <returns>Collection d'objets CommandeDocument</returns>
+        public List<CommandeDocument> GetCommandesLivre(string idDocument)
+        {
+            return Dao.GetCommandesLivre(idDocument);
+        }
+
+        /// <summary>
         /// récupère les exemplaires d'une revue
         /// </summary>
         /// <returns>Collection d'objets Exemplaire</returns>
@@ -103,6 +121,35 @@ namespace Mediatek86.controleur
             return Dao.CreerExemplaire(exemplaire);
         }
 
+        /// <summary>
+        /// Crée une commande dans la bdd
+        /// </summary>
+        /// <param name="commande">L'objet CommandeDocument concerné</param>
+        /// <returns>True si la création a pu se faire</returns>
+        public bool CreerCommande(CommandeDocument commande)
+        {
+            return Dao.CreerCommande(commande);
+        }
+
+        /// <summary>
+        /// Met à jour le suivi d'une commande dans la bdd
+        /// </summary>
+        /// <param name="commande">L'objet CommandeDocument concerné</param>
+        /// <returns>True si la création a pu se faire</returns>
+        internal bool UpdateCommande(CommandeDocument commande)
+        {
+            return Dao.UpdateCommande(commande);
+        }
+
+        /// <summary>
+        /// Supprime une commande dans la bdd
+        /// </summary>
+        /// <param name="commande">L'objet CommandeDocument concerné</param>
+        /// <returns>True si la suppression a pu se faire</returns>
+        internal bool DeleteCommande(CommandeDocument commande)
+        {
+            return Dao.DeleteCommande(commande);
+        }
     }
 
 }

@@ -262,5 +262,163 @@ namespace Mediatek86.modele
             }
         }
 
+        /// <summary>
+        /// ecriture d'une commande en base de données
+        /// </summary>
+        /// <param name="commande"></param>
+        /// <returns>true si l'insertion a pu se faire</returns>
+        public static bool CreerCommande(CommandeDocument commande)
+        {
+            try
+            {
+                string req2 = "insert into commande values (@id, @dateCommande, @montant, @idSuivi)";
+                Dictionary<string, object> parameters2 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id},
+                    { "@dateCommande", commande.DateCommande},
+                    { "@montant", commande.Montant},
+                    { "@idSuivi", commande.IdSuivi}
+                };
+                BddMySql curs2 = BddMySql.GetInstance(connectionString);
+                curs2.ReqUpdate(req2, parameters2);
+                curs2.Close();
+
+                string req1 = "insert into commandedocument values ((select id from commande where id = @id), @nbExemplaire, @idLivreDvd)";
+                Dictionary<string, object> parameters1 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id},
+                    { "@nbExemplaire", commande.NbExemplaire},
+                    { "@idLivreDvd", commande.IdLivreDvd}
+                };
+                BddMySql curs1 = BddMySql.GetInstance(connectionString);
+                curs1.ReqUpdate(req1, parameters1);
+                curs1.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// mise à jour d'une commande en base de données
+        /// </summary>
+        /// <param name="commande"></param>
+        /// <returns>true si l'update a pu se faire</returns>
+        public static bool UpdateCommande(CommandeDocument commande)
+        {
+            try
+            {
+                string req = "update commande set idSuivi = @idSuivi where id = @id";
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@idSuivi", commande.IdSuivi},
+                    { "@id", commande.Id}
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(req, parameters);
+                curs.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// supprime une commande en base de données
+        /// </summary>
+        /// <param name="commande"></param>
+        /// <returns>true si la suppression a pu se faire</returns>
+        public static bool DeleteCommande(CommandeDocument commande)
+        {
+            try
+            {
+                string req1 = "delete from commandedocument where id = @id";
+                Dictionary<string, object> parameters1 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id}
+                };
+                BddMySql curs1 = BddMySql.GetInstance(connectionString);
+                curs1.ReqUpdate(req1, parameters1);
+                curs1.Close();
+
+                string req2 = "delete from commande where id = @id";
+                Dictionary<string, object> parameters2 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id}
+                };
+                BddMySql curs2 = BddMySql.GetInstance(connectionString);
+                curs2.ReqUpdate(req2, parameters2);
+                curs2.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Retourne tous les suivis à partir de la BDD
+        /// </summary>
+        /// <returns>Liste d'objets Suivi</returns>
+        public static List<Suivi> GetAllSuivis()
+        {
+            List<Suivi> lesSuivis = new List<Suivi>();
+            string req = "Select * from suivi order by libelle";
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, null);
+
+            while (curs.Read())
+            {
+                Suivi suivi = new Suivi((string)curs.Field("id"), (string)curs.Field("libelle"));
+                lesSuivis.Add(suivi);
+            }
+            curs.Close();
+            return lesSuivis;
+        }
+
+        /// <summary>
+        /// Retourne toutes les commandes de livre à partir de la BDD
+        /// </summary>
+        /// <returns>Liste d'objets CommandeDocument</returns>
+        public static List<CommandeDocument> GetCommandesLivre(string idDocument)
+        {
+            List<CommandeDocument> lesCommandes = new List<CommandeDocument>();
+            string req = "Select d.id, c.dateCommande as 'date commande', c.montant, c.idSuivi, s.libelle as suivi, ";
+            req += "d.nbExemplaire as 'nombre exemplaire', d.idLivreDvd ";
+            req += "from commandedocument d join commande c on d.id=c.id ";
+            req += "join suivi s on s.id=c.idSuivi ";
+            req += "where d.idLivreDvd = @id ";
+            req += "order by 'date commande' DESC ";
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@id", idDocument}
+                };
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, parameters);
+
+            while (curs.Read())
+            {
+                string id = (string)curs.Field("id");
+                DateTime dateCommande = (DateTime)curs.Field("date commande");
+                double montant = (double)curs.Field("montant");
+                string idSuivi = (string)curs.Field("idSuivi");
+                string suivi = (string)curs.Field("suivi");
+                int nbExemplaire = (int)curs.Field("nombre exemplaire");
+                string idLivreDvd = (string)curs.Field("idLivreDvd");
+                CommandeDocument commandeDocument = new CommandeDocument(id, dateCommande, montant, idSuivi, suivi, nbExemplaire, idLivreDvd);
+                lesCommandes.Add(commandeDocument);
+            }
+            curs.Close();
+
+            return lesCommandes;
+        }
+
     }
 }

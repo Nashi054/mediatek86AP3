@@ -37,6 +37,27 @@ namespace Mediatek86.modele
         }
 
         /// <summary>
+        /// Retourne tous les abonnements qui arrivent à leur terme
+        /// </summary>
+        /// <returns>Collection d'objets FinAbonnement</returns>
+        public static List<FinAbonnement> GetAllFinAbonnement()
+        {
+            List<FinAbonnement> lesFinAbonnements = new List<FinAbonnement>();
+            string req = "Call finAbonnement()";
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, null);
+
+            while (curs.Read())
+            {
+                FinAbonnement finAbonnement = new FinAbonnement((string)curs.Field("titre"), (DateTime)curs.Field("dateFinAbonnement"));
+                lesFinAbonnements.Add(finAbonnement);
+            }
+            curs.Close();
+            return lesFinAbonnements;
+        }
+
+        /// <summary>
         /// Retourne tous les rayons à partir de la BDD
         /// </summary>
         /// <returns>Collection d'objets Rayon</returns>

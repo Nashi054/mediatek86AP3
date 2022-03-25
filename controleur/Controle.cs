@@ -14,6 +14,7 @@ namespace Mediatek86.controleur
         private readonly List<Categorie> lesRayons;
         private readonly List<Categorie> lesPublics;
         private readonly List<Categorie> lesGenres;
+        private readonly List<FinAbonnement> lesFinAbonnements;
 
         /// <summary>
         /// Ouverture de la fenêtre
@@ -26,8 +27,20 @@ namespace Mediatek86.controleur
             lesGenres = Dao.GetAllGenres();
             lesRayons = Dao.GetAllRayons();
             lesPublics = Dao.GetAllPublics();
+            lesFinAbonnements = Dao.GetAllFinAbonnement();
+            FrmFinAbonnement frmFinAbonnement = new FrmFinAbonnement(this);
+            frmFinAbonnement.ShowDialog();
             FrmMediatek frmMediatek = new FrmMediatek(this);
             frmMediatek.ShowDialog();
+        }
+
+        /// <summary>
+        /// getter sur la liste des abonnements arrivant à leur terme
+        /// </summary>
+        /// <returns>Collection d'objets FinAbonnement</returns>
+        public List<FinAbonnement> GetAllFinAbonnement()
+        {
+            return lesFinAbonnements;
         }
 
         /// <summary>

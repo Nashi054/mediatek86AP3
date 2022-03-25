@@ -255,6 +255,7 @@ namespace Mediatek86.vue
             this.label84 = new System.Windows.Forms.Label();
             this.tabCommandesRevues = new System.Windows.Forms.TabPage();
             this.grpCommandeRevue = new System.Windows.Forms.GroupBox();
+            this.dtpFinAboCR = new System.Windows.Forms.DateTimePicker();
             this.btnDelCR = new System.Windows.Forms.Button();
             this.txbNumCR = new System.Windows.Forms.TextBox();
             this.label85 = new System.Windows.Forms.Label();
@@ -287,7 +288,6 @@ namespace Mediatek86.vue
             this.pcbCRImage = new System.Windows.Forms.PictureBox();
             this.label97 = new System.Windows.Forms.Label();
             this.label98 = new System.Windows.Forms.Label();
-            this.dtpFinAboCR = new System.Windows.Forms.DateTimePicker();
             this.tabMediatek.SuspendLayout();
             this.tabLivres.SuspendLayout();
             this.grpLivresInfos.SuspendLayout();
@@ -2713,6 +2713,14 @@ namespace Mediatek86.vue
             this.grpCommandeRevue.TabStop = false;
             this.grpCommandeRevue.Text = "Nouvelle commande de revue";
             // 
+            // dtpFinAboCR
+            // 
+            this.dtpFinAboCR.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpFinAboCR.Location = new System.Drawing.Point(575, 103);
+            this.dtpFinAboCR.Name = "dtpFinAboCR";
+            this.dtpFinAboCR.Size = new System.Drawing.Size(101, 20);
+            this.dtpFinAboCR.TabIndex = 43;
+            // 
             // btnDelCR
             // 
             this.btnDelCR.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3038,14 +3046,6 @@ namespace Mediatek86.vue
             this.label98.Size = new System.Drawing.Size(50, 13);
             this.label98.TabIndex = 19;
             this.label98.Text = "Public :";
-            // 
-            // dtpFinAboCR
-            // 
-            this.dtpFinAboCR.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFinAboCR.Location = new System.Drawing.Point(575, 103);
-            this.dtpFinAboCR.Name = "dtpFinAboCR";
-            this.dtpFinAboCR.Size = new System.Drawing.Size(101, 20);
-            this.dtpFinAboCR.TabIndex = 43;
             // 
             // FrmMediatek
             // 

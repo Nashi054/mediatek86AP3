@@ -94,12 +94,13 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// getter sur les commandes
+        /// getter sur les commandes de livre et de dvd
         /// </summary>
+        /// <param name="idDocument"></param>
         /// <returns>Collection d'objets CommandeDocument</returns>
-        public List<CommandeDocument> GetCommandesLivre(string idDocument)
+        public List<CommandeDocument> GetCommandesLivreDvd(string idDocument)
         {
-            return Dao.GetCommandesLivre(idDocument);
+            return Dao.GetCommandesLivreDvd(idDocument);
         }
 
         /// <summary>

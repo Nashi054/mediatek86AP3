@@ -104,6 +104,16 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
+        /// getter sur les commandes de revue
+        /// </summary>
+        /// <param name="idDocuement"></param>
+        /// <returns>Collection d'objets Abonnement</returns>
+        public List<Abonnement> GetCommandesRevues(string idDocument)
+        {
+            return Dao.GetCommandesRevues(idDocument);
+        }
+
+        /// <summary>
         /// récupère les exemplaires d'une revue
         /// </summary>
         /// <returns>Collection d'objets Exemplaire</returns>
@@ -123,13 +133,23 @@ namespace Mediatek86.controleur
         }
 
         /// <summary>
-        /// Crée une commande dans la bdd
+        /// Crée une commande de livre ou de DVD dans la bdd
         /// </summary>
         /// <param name="commande">L'objet CommandeDocument concerné</param>
         /// <returns>True si la création a pu se faire</returns>
-        public bool CreerCommande(CommandeDocument commande)
+        public bool CreerCommandeLivreDvd(CommandeDocument commande)
         {
-            return Dao.CreerCommande(commande);
+            return Dao.CreerCommandeLivreDvd(commande);
+        }
+
+        /// <summary>
+        /// Crée une commande de revue dans la bdd
+        /// </summary>
+        /// <param name="commande">L'objet Abonnement concerné</param>
+        /// <returns>True si la création a pu se faire</returns>
+        public bool CreerCommandeRevue(Abonnement commande)
+        {
+            return Dao.CreerCommandeRevue(commande);
         }
 
         /// <summary>
@@ -137,19 +157,29 @@ namespace Mediatek86.controleur
         /// </summary>
         /// <param name="commande">L'objet CommandeDocument concerné</param>
         /// <returns>True si la création a pu se faire</returns>
-        internal bool UpdateCommande(CommandeDocument commande)
+        public bool UpdateCommande(CommandeDocument commande)
         {
             return Dao.UpdateCommande(commande);
         }
 
         /// <summary>
-        /// Supprime une commande dans la bdd
+        /// Supprime une commande de livre ou de DVD dans la bdd
         /// </summary>
         /// <param name="commande">L'objet CommandeDocument concerné</param>
         /// <returns>True si la suppression a pu se faire</returns>
-        internal bool DeleteCommande(CommandeDocument commande)
+        public bool DeleteCommandeLivreDvd(CommandeDocument commande)
         {
-            return Dao.DeleteCommande(commande);
+            return Dao.DeleteCommandeLivreDvd(commande);
+        }
+
+        /// <summary>
+        /// Supprime une commande de revue dans la bdd
+        /// </summary>
+        /// <param name="commande"></param>
+        /// <returns>True si la suppression a pu se faire</returns>
+        public bool DeleteCommandeRevue(Abonnement commande)
+        {
+            return Dao.DeleteCommandeRevue(commande);
         }
     }
 

@@ -263,11 +263,11 @@ namespace Mediatek86.modele
         }
 
         /// <summary>
-        /// ecriture d'une commande en base de données
+        /// ecriture d'une commande de livre ou de dvd en base de données
         /// </summary>
         /// <param name="commande"></param>
         /// <returns>true si l'insertion a pu se faire</returns>
-        public static bool CreerCommande(CommandeDocument commande)
+        public static bool CreerCommandeLivreDvd(CommandeDocument commande)
         {
             try
             {
@@ -289,6 +289,45 @@ namespace Mediatek86.modele
                     { "@id", commande.Id},
                     { "@nbExemplaire", commande.NbExemplaire},
                     { "@idLivreDvd", commande.IdLivreDvd}
+                };
+                BddMySql curs1 = BddMySql.GetInstance(connectionString);
+                curs1.ReqUpdate(req1, parameters1);
+                curs1.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ecriture d'une commande de revue en base de données
+        /// </summary>
+        /// <param name="commande"></param>
+        /// <returns>true si l'insertion a pu se faire</returns>
+        public static bool CreerCommandeRevue(Abonnement commande)
+        {
+            try
+            {
+                string req2 = "insert into commande values (@id, @dateCommande, @montant, @idSuivi)";
+                Dictionary<string, object> parameters2 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id},
+                    { "@dateCommande", commande.DateCommande},
+                    { "@montant", commande.Montant},
+                    { "@idSuivi", null}
+                };
+                BddMySql curs2 = BddMySql.GetInstance(connectionString);
+                curs2.ReqUpdate(req2, parameters2);
+                curs2.Close();
+
+                string req1 = "insert into abonnement values ((select id from commande where id = @id), @dateFinAbonnement, @idRevue)";
+                Dictionary<string, object> parameters1 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id},
+                    { "@dateFinAbonnement", commande.DateFinAbonnement},
+                    { "@idRevue", commande.IdRevue}
                 };
                 BddMySql curs1 = BddMySql.GetInstance(connectionString);
                 curs1.ReqUpdate(req1, parameters1);
@@ -328,15 +367,49 @@ namespace Mediatek86.modele
         }
 
         /// <summary>
-        /// supprime une commande en base de données
+        /// supprime une commande de livre ou de dvd en base de données
         /// </summary>
         /// <param name="commande"></param>
         /// <returns>true si la suppression a pu se faire</returns>
-        public static bool DeleteCommande(CommandeDocument commande)
+        public static bool DeleteCommandeLivreDvd(CommandeDocument commande)
         {
             try
             {
                 string req1 = "delete from commandedocument where id = @id";
+                Dictionary<string, object> parameters1 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id}
+                };
+                BddMySql curs1 = BddMySql.GetInstance(connectionString);
+                curs1.ReqUpdate(req1, parameters1);
+                curs1.Close();
+
+                string req2 = "delete from commande where id = @id";
+                Dictionary<string, object> parameters2 = new Dictionary<string, object>
+                {
+                    { "@id", commande.Id}
+                };
+                BddMySql curs2 = BddMySql.GetInstance(connectionString);
+                curs2.ReqUpdate(req2, parameters2);
+                curs2.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// supprime une commande de revue en base de données
+        /// </summary>
+        /// <param name="commande"></param>
+        /// <returns>true si la suppression a pu se faire</returns>
+        public static bool DeleteCommandeRevue(Abonnement commande)
+        {
+            try
+            {
+                string req1 = "delete from abonnement where id = @id";
                 Dictionary<string, object> parameters1 = new Dictionary<string, object>
                 {
                     { "@id", commande.Id}
@@ -415,6 +488,42 @@ namespace Mediatek86.modele
                 string idLivreDvd = (string)curs.Field("idLivreDvd");
                 CommandeDocument commandeDocument = new CommandeDocument(id, dateCommande, montant, idSuivi, suivi, nbExemplaire, idLivreDvd);
                 lesCommandes.Add(commandeDocument);
+            }
+            curs.Close();
+
+            return lesCommandes;
+        }
+
+        /// <summary>
+        /// Retourne toutes les commandes de revue à partir de la BDD
+        /// </summary>
+        /// <param name="idDocument"></param>
+        /// <returns>Collection d'objets Abonnement</returns>
+        public static List<Abonnement> GetCommandesRevues(string idDocument)
+        {
+            List<Abonnement> lesCommandes = new List<Abonnement>();
+            string req = "Select a.id, c.dateCommande as 'date commande', c.montant, ";
+            req += "a.dateFinAbonnement as 'date fin abonnement', a.idRevue ";
+            req += "from abonnement a join commande c on a.id=c.id ";
+            req += "where a.idRevue = @id ";
+            req += "order by 'date commande' DESC ";
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@id", idDocument}
+                };
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, parameters);
+
+            while (curs.Read())
+            {
+                string id = (string)curs.Field("id");
+                DateTime dateCommande = (DateTime)curs.Field("date commande");
+                double montant = (double)curs.Field("montant");
+                DateTime dateFinAbonnement = (DateTime)curs.Field("date fin abonnement");
+                string idRevue = (string)curs.Field("idRevue");
+                Abonnement abonnement = new Abonnement(id, dateCommande, montant, dateFinAbonnement, idRevue);
+                lesCommandes.Add(abonnement);
             }
             curs.Close();
 

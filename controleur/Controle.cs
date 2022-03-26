@@ -6,7 +6,7 @@ using System;
 
 namespace Mediatek86.controleur
 {
-    internal class Controle
+    public class Controle
     {
         private readonly List<Livre> lesLivres;
         private readonly List<Dvd> lesDvd;
@@ -130,7 +130,7 @@ namespace Mediatek86.controleur
         /// <summary>
         /// getter sur les commandes de revue
         /// </summary>
-        /// <param name="idDocuement"></param>
+        /// <param name="idDocument"></param>
         /// <returns>Collection d'objets Abonnement</returns>
         public List<Abonnement> GetCommandesRevues(string idDocument)
         {
@@ -235,6 +235,23 @@ namespace Mediatek86.controleur
         public bool getServicePrets()
         {
             return this.servicePrets;
+        }
+
+        /// <summary>
+        /// Retourne vrai si la date de parution est comprise entre la date de commande
+        /// et la date de fin d'abonnement
+        /// </summary>
+        /// <param name="dateCommande"></param>
+        /// <param name="dateFinAbonnement"></param>
+        /// <param name="dateParution"></param>
+        /// <returns>True si dateParution entre dateCommande et dateFinAbonnement</returns>
+        public bool ParutionDansAbonnement(DateTime dateCommande, DateTime dateFinAbonnement, DateTime dateParution)
+        {
+            if ((dateParution >= dateCommande) && (dateParution < dateFinAbonnement))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

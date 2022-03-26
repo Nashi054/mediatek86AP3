@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using Serilog;
 
 namespace Mediatek86.bdd
 {
@@ -28,6 +29,10 @@ namespace Mediatek86.bdd
         /// <param name="stringConnect">chaine de connexion</param>
         private BddMySql(string stringConnect)
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("logs/errorlog.txt")
+                .CreateLogger();
             try
             {
                 connection = new MySqlConnection(stringConnect);
@@ -77,6 +82,7 @@ namespace Mediatek86.bdd
             catch (MySqlException e)
             {
                 Console.WriteLine(e.Message);
+                Log.Information("erreur d'execution de requête 'select'");
             }
             catch (InvalidOperationException e)
             {
@@ -149,6 +155,7 @@ namespace Mediatek86.bdd
             catch (MySqlException e)
             {
                 Console.WriteLine(e.Message);
+                Log.Information("erreur d'execution de requête autre que 'select'");
                 throw;
             }
             catch (InvalidOperationException e)

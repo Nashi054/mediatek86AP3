@@ -5,6 +5,7 @@ using Mediatek86.metier;
 using Mediatek86.controleur;
 using System.Drawing;
 using System.Linq;
+using Serilog;
 
 namespace Mediatek86.vue
 {
@@ -53,7 +54,6 @@ namespace Mediatek86.vue
                 grpCommandeRevue.Enabled = false;
             }
         }
-
 
         #region modules communs
 
@@ -2147,7 +2147,7 @@ namespace Mediatek86.vue
                 {
                     if (exemplaire.IdDocument == commande.IdRevue)
                     {
-                        bool parutionDansAbonnement = ParutionDansAbonnement(commande.DateCommande, commande.DateFinAbonnement, exemplaire.DateAchat);
+                        bool parutionDansAbonnement = controle.ParutionDansAbonnement(commande.DateCommande, commande.DateFinAbonnement, exemplaire.DateAchat);
                         if (parutionDansAbonnement)
                         {
                             nbParutionDansAbonnement++;
@@ -2166,23 +2166,6 @@ namespace Mediatek86.vue
             {
                 MessageBox.Show("liste vide", "Information");
             }
-        }
-
-        /// <summary>
-        /// Retourne vrai si la date de parution est comprise entre la date de commande
-        /// et la date de fin d'abonnement
-        /// </summary>
-        /// <param name="dateCommande"></param>
-        /// <param name="dateFinAbonnement"></param>
-        /// <param name="dateParution"></param>
-        /// <returns>True si dateParution entre dateCommande et dateFinAbonnement</returns>
-        public bool ParutionDansAbonnement(DateTime dateCommande, DateTime dateFinAbonnement, DateTime dateParution)
-        {
-            if ((dateParution >= dateCommande) && (dateParution < dateFinAbonnement))
-            {
-                return true;
-            }
-            return false;
         }
 
         #endregion

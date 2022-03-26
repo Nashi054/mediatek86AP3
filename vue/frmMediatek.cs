@@ -41,6 +41,17 @@ namespace Mediatek86.vue
         {
             InitializeComponent();
             this.controle = controle;
+            if (controle.getServicePrets())
+            {
+                grpReceptionRevue.Enabled = false;
+                grpReceptionExemplaire.Enabled = false;
+                grpCLRecherche.Enabled = false;
+                grpCommandeLivre.Enabled = false;
+                grpCDRecherche.Enabled = false;
+                grpCommandeDvd.Enabled = false;
+                grpCRRecherche.Enabled = false;
+                grpCommandeRevue.Enabled = false;
+            }
         }
 
 

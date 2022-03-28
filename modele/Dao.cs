@@ -9,11 +9,11 @@ namespace Mediatek86.modele
     public static class Dao
     {
 
-        private static readonly string server = "localhost";
-        private static readonly string userid = "root";
-        private static readonly string password = "";
+        private static readonly string server = "mediatek86nielsteston.mysql.database.azure.com";
+        private static readonly string userid = "adminmysql";
+        private static readonly string password = "Sio1234*";
         private static readonly string database = "mediatek86";
-        private static readonly string connectionString = "server="+server+";user id="+userid+";password="+password+";database="+database+";SslMode=none";
+        private static readonly string connectionString = "Server = "+server+"; UserID = "+userid+";Password="+password+";Database="+database+";SslMode=none;";
 
         /// <summary>
         /// Retourne tous les genres à partir de la BDD
@@ -231,7 +231,7 @@ namespace Mediatek86.modele
             while (curs.Read())
             {
                 string id = (string)curs.Field("id");
-                bool empruntable = (bool)curs.Field("empruntable");
+                int empruntable = (int)curs.Field("empruntable");
                 string periodicite = (string)curs.Field("periodicite");
                 string titre = (string)curs.Field("titre");
                 string image = (string)curs.Field("image");
@@ -243,7 +243,7 @@ namespace Mediatek86.modele
                 string lepublic = (string)curs.Field("public");
                 string rayon = (string)curs.Field("rayon");
                 Revue revue = new Revue(id, titre, image, idgenre, genre,
-                    idpublic, lepublic, idrayon, rayon, empruntable, periodicite, delaiMiseADispo);
+                    idpublic, lepublic, idrayon, rayon, Convert.ToBoolean(empruntable), periodicite, delaiMiseADispo);
                 lesRevues.Add(revue);
             }
             curs.Close();
